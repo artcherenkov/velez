@@ -5,6 +5,7 @@ import {
   YMapDefaultFeaturesLayer,
   YMapFeature,
   YMapListener,
+  YMapMarker,
 } from "@yandex/ymaps3-types";
 import { YMapZoomControl } from "@yandex/ymaps3-types/packages/controls";
 import { YMapDefaultMarker } from "@yandex/ymaps3-types/packages/markers";
@@ -16,6 +17,7 @@ export interface IYMapModules {
   YMapControls: ReactifiedEntity<typeof YMapControls>;
   YMapDefaultFeaturesLayer: ReactifiedEntity<typeof YMapDefaultFeaturesLayer>;
   YMapDefaultMarker: ReactifiedEntity<typeof YMapDefaultMarker>;
+  YMapMarker: ReactifiedEntity<typeof YMapMarker>;
   YMapZoomControl: ReactifiedEntity<typeof YMapZoomControl>;
   YMapFeature: ReactifiedEntity<typeof YMapFeature>;
   YMapListener: ReactifiedEntity<typeof YMapListener>;

@@ -1,0 +1,22 @@
+.root {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 40px;
+  transform: translate(calc(-50% + 1px), calc(-50% - 15px));
+
+  display: flex;
+  flex-direction: column;
+}
+
+.coords {
+  position: absolute;
+  top: -70px;
+  left: 50%;
+  width: 250px;
+  text-align: center;
+  transform: translateX(-50%);
+  color: red;
+}

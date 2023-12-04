@@ -5,6 +5,8 @@ import { YMapsContext } from "../../contexts/YMapsContext";
 import { TRouteFeature, TWaypointFeature } from "../../types/geo";
 
 import styles from "./Map.module.css";
+import { Marker } from "./components/Marker";
+import { BASE_URL } from "../../ymaps";
 
 const LOCATION = { center: [30.368501, 59.884941], zoom: 16 };
 
@@ -16,23 +18,26 @@ interface IMapProps {
   onWaypointsChange(waypoints: TWaypointFeature[]): void;
 }
 
+const getGeocoded = async (coords: LngLat) => {
+  const res = await fetch(BASE_URL + `/geocode`, {
+    method: "POST",
+    body: JSON.stringify({ coords }),
+    headers: {
+      Referer: "http://localhost:3030/",
+      "Content-Type": "application/json",
+    },
+  });
+
+  return res.json();
+};
+
 export function Map(props: IMapProps) {
   const ymapsModules = useContext(YMapsContext);
 
-  const {
-    waypoints,
-    route,
-    activeWaypointId,
-    onWaypointsChange,
-    onActiveWaypointChange,
-  } = props;
+  const { waypoints, route } = props;
 
-  const [newWaypointCoords, setNewWaypointCoords] = useState<LngLat>([0, 0]);
-
-  const waypointToChangeIdx = waypoints.findIndex(
-    (w) => w.id === activeWaypointId,
-  );
-  const isUpdatingFeatures = waypointToChangeIdx !== -1;
+  const [centerCoords, setCenterCoords] = useState<LngLat>([0, 0]);
+  const [markerTitle, setMarkerTitle] = useState("");
 
   if (!ymapsModules) {
     return <div className={styles.root}>Loading...</div>;
@@ -53,20 +58,14 @@ export function Map(props: IMapProps) {
     <div className={styles.root}>
       <YMap location={LOCATION} mode="vector">
         <YMapListener
-          onClick={(_obj, evt) => {
-            if (isUpdatingFeatures) {
-              console.log("create");
-              waypoints[waypointToChangeIdx].geometry.coordinates =
-                evt.coordinates;
-              waypoints[waypointToChangeIdx].properties.inputValue =
-                evt.coordinates.toString();
-
-              onActiveWaypointChange(null);
-              onWaypointsChange(waypoints);
-            }
-          }}
-          onPointerMove={(_obj, evt) => {
-            setNewWaypointCoords(evt.coordinates);
+          onActionEnd={async ({ location }) => {
+            setCenterCoords(location.center);
+            console.log(location.center);
+            const { response } = await getGeocoded(location.center);
+            setMarkerTitle(
+              response.GeoObjectCollection.featureMember[0].GeoObject
+                .metaDataProperty.GeocoderMetaData.text,
+            );
           }}
         />
         <YMapDefaultSchemeLayer />
@@ -79,14 +78,7 @@ export function Map(props: IMapProps) {
             onDragEnd={(evt) => console.log(evt)}
           />
         ))}
-        {isUpdatingFeatures && (
-          <YMapDefaultMarker
-            key="new waypoint"
-            color="rgb(255, 51, 51, 0.3)"
-            coordinates={newWaypointCoords}
-            onDragEnd={(evt) => console.log(evt)}
-          />
-        )}
+        <Marker>{markerTitle}</Marker>
 
         <YMapControls position="right">
           <YMapZoomControl />

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import { IYMapModules } from "../types";
 
-const BASE_URL = "https://velez-trip.ru/api";
+export const BASE_URL = "https://velez-trip.ru/api";
 
 export async function loadSources() {
   await fetch(BASE_URL + "/load-ymaps")
@@ -41,6 +41,7 @@ export async function loadYmapsModules(): Promise<IYMapModules> {
     YMapZoomControl: reactify.module(YMapZoomControlModule).YMapZoomControl,
     YMapDefaultMarker: reactify.module(YMapDefaultMarkerModule)
       .YMapDefaultMarker,
+    YMapMarker: reactify.module(ymaps3).YMapMarker,
     YMapFeature: reactify.module(ymaps3).YMapFeature,
     YMapListener: reactify.module(ymaps3).YMapListener,
   };
