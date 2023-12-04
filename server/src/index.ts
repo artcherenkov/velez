@@ -1,11 +1,16 @@
 import fastify from "fastify";
 import dotenv from "dotenv";
+import cors from "@fastify/cors";
 
 dotenv.config();
 
 const YANDEX_MAPS_API_KEY = process.env.YANDEX_MAPS_API_KEY;
 
 const server = fastify({ logger: true });
+
+server.register(cors, {
+  origin: true
+});
 
 server.get("/load-ymaps", async (_request, reply) => {
   const response = await fetch(
