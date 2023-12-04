@@ -40,13 +40,6 @@ export function PageContainer() {
 
   return (
     <div className={styles.root}>
-      <WaypointsForm
-        waypoints={waypoints}
-        activeWaypointId={activeWaypointId}
-        onActiveWaypointChange={setActiveWaypointId}
-        onWaypointsChange={setWaypoints}
-        onRouteBuilt={setRoute}
-      />
       <Map
         waypoints={waypoints}
         route={route}

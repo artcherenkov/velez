@@ -8,7 +8,7 @@ body {
 }
 
 #root {
-  min-height: 100vh;
+  height: var(--page-height);
   display: flex;
   flex-direction: column;
   background-color: #393e41;

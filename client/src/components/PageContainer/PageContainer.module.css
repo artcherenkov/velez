@@ -1,5 +1,3 @@
 .root {
-  flex-grow: 1;
-  display: grid;
-  grid-template-columns: 400px 1fr;
+  height: 100%;
 }

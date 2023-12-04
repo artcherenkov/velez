@@ -1,5 +1,4 @@
 .root {
-  border-top-left-radius: 16px;
-  border-bottom-left-radius: 16px;
   overflow: hidden;
+  height: 100%;
 }
