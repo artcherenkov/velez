@@ -1,0 +1,6 @@
+/* double selector weight for MUI */
+.mapContainer.mapContainer {
+  width: 100%;
+  height: var(--page-height);
+  overflow: hidden;
+}
