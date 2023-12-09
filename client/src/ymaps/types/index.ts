@@ -1,8 +1,8 @@
 import {
   YMap,
-  YMapDefaultSchemeLayer,
   YMapControls,
   YMapDefaultFeaturesLayer,
+  YMapDefaultSchemeLayer,
   YMapFeature,
   YMapListener,
   YMapMarker,

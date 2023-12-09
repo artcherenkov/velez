@@ -1,1 +1,2 @@
-export * from "./utils/loadYmapsModules";
+export * from "./types";
+export * from "./utils";

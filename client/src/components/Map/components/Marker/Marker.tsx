@@ -1,4 +1,5 @@
 import React from "react";
+
 import { MapMarkerIcon } from "../../../../icons/MapMarkerIcon";
 
 import styles from "./Marker.module.css";

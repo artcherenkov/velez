@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 
-import { loadYmapsModules } from "../../ymaps";
-import { IYMapModules } from "../../ymaps/types";
+import { IYMapModules, loadYmapsModules } from "../../ymaps";
 
 export const YMapsContext = createContext<IYMapModules | null>(null);
 
@@ -17,16 +16,16 @@ export function YMapsProvider({ children }: IYMapsProvider) {
 
     async function loadModules() {
       if (typeof window.ymaps3 !== "undefined") {
-        clearInterval(intervalId); // Очистить интервал, когда ymaps3 стал доступен
+        clearInterval(intervalId);
         const loadedModules: IYMapModules = await loadYmapsModules();
         setModules(loadedModules);
       }
     }
 
-    intervalId = setInterval(loadModules, 50); // Проверять каждые 500 мс
+    intervalId = setInterval(loadModules, 50);
 
     return () => {
-      clearInterval(intervalId); // Очищаем интервал при размонтировании компонента
+      clearInterval(intervalId);
     };
   }, []);
 
