@@ -1,8 +1,12 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
+import { YMap } from "@yandex/ymaps3-types";
 
 import { IYMapModules, loadYmapsModules } from "../../ymaps";
 
-export const YMapsContext = createContext<IYMapModules | null>(null);
+export const YMapsContext = createContext<{
+  modules: IYMapModules | null;
+  mapRef: React.Ref<YMap>;
+}>({ modules: null, mapRef: null });
 
 interface IYMapsProvider {
   children: React.ReactNode;
@@ -10,6 +14,7 @@ interface IYMapsProvider {
 
 export function YMapsProvider({ children }: IYMapsProvider) {
   const [modules, setModules] = useState<IYMapModules | null>(null);
+  const mapRef = useRef<YMap>(null);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | undefined = undefined;
@@ -30,6 +35,8 @@ export function YMapsProvider({ children }: IYMapsProvider) {
   }, []);
 
   return (
-    <YMapsContext.Provider value={modules}>{children}</YMapsContext.Provider>
+    <YMapsContext.Provider value={{ modules, mapRef }}>
+      {children}
+    </YMapsContext.Provider>
   );
 }

@@ -1,14 +1,23 @@
 .root {
   position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 10;
+}
+
+.marker {
+  position: absolute;
   top: 50%;
   left: 50%;
-  width: 200px;
+  z-index: 10;
+  width: 40px;
   height: 40px;
-  transform: translate(calc(-50% + 1px), calc(-50% - 15px));
-
-  display: flex;
-  flex-direction: column;
+  transform: translate(calc(-50% + 1px), calc(-100% + 2px));
 }
 
 .coords {

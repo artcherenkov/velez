@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { LngLat } from "@yandex/ymaps3-types";
 import { YMapLocationRequest } from "@yandex/ymaps3-types/imperative/YMap";
 
 import { DEFAULT_LOCATION } from "../constants/map";
@@ -8,6 +9,8 @@ import { RootState } from "./index";
 type TDestination = {
   id: string;
   placeholder: string;
+  value: string;
+  coordinates: LngLat | null;
 };
 
 interface AppState {
@@ -15,15 +18,23 @@ interface AppState {
   createTripForm: {
     chooseOnMap: {
       isActive: boolean;
+      activeInputId: string | null;
+      markerCoordinates: LngLat | null;
+      previewInputValue: string;
     };
     destinations: TDestination[];
   };
 }
 
+type TReorderDestinationsPayload = PayloadAction<{
+  startIndex: number;
+  endIndex: number;
+}>;
+
 const initialDestinations: TDestination[] = [
-  { placeholder: "Точка 1", id: "wfjnwf" },
-  { placeholder: "Точка 2", id: "vnemf" },
-  { placeholder: "Точка 3", id: "efnfjkef" },
+  { placeholder: "Точка 1", id: "wfjnwf", value: "", coordinates: null },
+  { placeholder: "Точка 2", id: "vnemf", value: "", coordinates: null },
+  { placeholder: "Точка 3", id: "efnfjkef", value: "", coordinates: null },
 ];
 
 const initialState: AppState = {
@@ -31,6 +42,9 @@ const initialState: AppState = {
   createTripForm: {
     chooseOnMap: {
       isActive: false,
+      activeInputId: null,
+      markerCoordinates: null,
+      previewInputValue: "",
     },
     destinations: initialDestinations,
   },
@@ -44,10 +58,7 @@ export const appSlice = createSlice({
       state.createTripForm.chooseOnMap.isActive =
         action.payload ?? !state.createTripForm.chooseOnMap.isActive;
     },
-    reorderDestinations: (
-      state,
-      action: PayloadAction<{ startIndex: number; endIndex: number }>,
-    ) => {
+    reorderDestinations: (state, action: TReorderDestinationsPayload) => {
       const { startIndex, endIndex } = action.payload;
 
       const result = Array.from(state.createTripForm.destinations);
@@ -56,10 +67,38 @@ export const appSlice = createSlice({
 
       state.createTripForm.destinations = result;
     },
+    setActiveInputId: (state, action: PayloadAction<string | null>) => {
+      state.createTripForm.chooseOnMap.activeInputId = action.payload;
+    },
+    setMarkerCoordinates: (state, action: PayloadAction<LngLat | null>) => {
+      const { chooseOnMap } = state.createTripForm;
+      chooseOnMap.markerCoordinates = action.payload;
+      chooseOnMap.previewInputValue = action.payload?.toString() || "unset";
+    },
+    setDestinationCoordinates: (state) => {
+      const {
+        destinations,
+        chooseOnMap: { activeInputId, markerCoordinates },
+      } = state.createTripForm;
+      const activeDestinationIndex = destinations.findIndex(
+        (d) => d.id === activeInputId,
+      );
+      destinations[activeDestinationIndex].coordinates = markerCoordinates;
+    },
+    setMapLocation: (state, action: PayloadAction<LngLat>) => {
+      state.mapDefaultLocation = { center: action.payload, zoom: 12 };
+    },
   },
 });
 
-export const { toggleChooseOnMap, reorderDestinations } = appSlice.actions;
+export const {
+  toggleChooseOnMap,
+  reorderDestinations,
+  setActiveInputId,
+  setMarkerCoordinates,
+  setDestinationCoordinates,
+  setMapLocation,
+} = appSlice.actions;
 
 export const selectMapDefaultLocation = (state: RootState) => {
   return state.mapDefaultLocation;
@@ -71,6 +110,26 @@ export const selectIsChooseOnMapActive = (state: RootState) => {
 
 export const selectDestinations = (state: RootState) => {
   return state.createTripForm.destinations;
+};
+
+export const selectDestinationsById = (
+  state: RootState,
+): { [id: string]: TDestination } => {
+  return state.createTripForm.destinations.reduce((acc, d) => {
+    return { ...acc, [d.id]: d };
+  }, {});
+};
+
+export const selectActiveInputId = (state: RootState) => {
+  return state.createTripForm.chooseOnMap.activeInputId;
+};
+
+export const selectMarkerCoordinates = (state: RootState) => {
+  return state.createTripForm.chooseOnMap.markerCoordinates;
+};
+
+export const selectPreviewInputValue = (state: RootState) => {
+  return state.createTripForm.chooseOnMap.previewInputValue;
 };
 
 export default appSlice.reducer;

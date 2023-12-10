@@ -4,10 +4,9 @@ import { MapMarkerIcon } from "../../../../icons/MapMarkerIcon";
 
 import styles from "./Marker.module.css";
 
-export const Marker = ({ children }: { children?: React.ReactNode }) => {
+export const Marker = () => {
   return (
-    <div className={styles.root}>
-      <span className={styles.coords}>{children}</span>
+    <div className={styles.marker}>
       <MapMarkerIcon />
     </div>
   );

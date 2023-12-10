@@ -2,8 +2,18 @@ import React from "react";
 
 export const MapMarkerIcon = () => {
   return (
-    <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="#f43">
-      <path d="M12 2c-4.2 0-8 3.22-8 8.2 0 3.18 2.45 6.92 7.34 11.23.38.33.95.33 1.33 0C17.55 17.12 20 13.38 20 10.2 20 5.22 16.2 2 12 2zm0 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"></path>
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 0C7.8 0 4 3.22 4 8.2C4 11.38 6.45 15.12 11.34 19.43C11.72 19.76 12.29 19.76 12.67 19.43C17.55 15.12 20 11.38 20 8.2C20 3.22 16.2 0 12 0ZM12 10C10.9 10 10 9.1 10 8C10 6.9 10.9 6 12 6C13.1 6 14 6.9 14 8C14 9.1 13.1 10 12 10Z"
+        fill="#FF1E1E"
+      />
+      <circle cx="12" cy="23" r="1" fill="#FF1E1E" />
     </svg>
   );
 };

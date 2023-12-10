@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import Typography from "@mui/material/Typography";
+import { LngLat, YMap } from "@yandex/ymaps3-types";
 
+import { YMapsContext } from "../../../../contexts/YMapsContext";
 import {
   reorderDestinations,
   selectDestinations,
+  selectDestinationsById,
+  setActiveInputId,
+  setMapLocation,
+  setMarkerCoordinates,
   toggleChooseOnMap,
 } from "../../../../redux/appSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
@@ -14,10 +20,21 @@ import { DestinationInput } from "../DestinationInput";
 export function DestinationsBlock() {
   const dispatch = useAppDispatch();
   const destinations = useAppSelector(selectDestinations);
+  const destinationsById = useAppSelector(selectDestinationsById);
+  const { mapRef } = useContext(YMapsContext);
 
-  const onChooseOnMapClick = () => {
+  const onChooseOnMapClick = (id: string) => () => {
+    const destination = destinationsById[id];
+    const [lat, lon] = (mapRef as { current: YMap }).current.center;
+    const mapCenterLngLat: LngLat = [lat, lon];
+    const markerCoordinates = destination.coordinates || mapCenterLngLat;
+
+    dispatch(setActiveInputId(id));
+    dispatch(setMarkerCoordinates(markerCoordinates));
+    dispatch(setMapLocation(markerCoordinates));
     dispatch(toggleChooseOnMap(true));
   };
+  const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {};
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
@@ -46,8 +63,11 @@ export function DestinationsBlock() {
                   style={provided.draggableProps.style}
                 >
                   <DestinationInput
+                    id={d.id}
                     placeholder={d.placeholder}
-                    onChooseOnMapClick={onChooseOnMapClick}
+                    value={destinationsById[d.id].coordinates?.toString() || ""}
+                    onChange={onChange}
+                    onChooseOnMapClick={onChooseOnMapClick(d.id)}
                     dragHandle={
                       <DragHandle dragHandleProps={provided.dragHandleProps} />
                     }

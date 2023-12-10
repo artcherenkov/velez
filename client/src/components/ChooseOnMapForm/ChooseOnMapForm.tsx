@@ -2,8 +2,12 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 
+import { DEFAULT_LOCATION } from "../../constants/map";
 import {
   selectIsChooseOnMapActive,
+  setActiveInputId,
+  setMapLocation,
+  setMarkerCoordinates,
   toggleChooseOnMap,
 } from "../../redux/appSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -18,7 +22,10 @@ export function ChooseOnMapForm() {
   const open = useAppSelector(selectIsChooseOnMapActive);
 
   const onClose = () => {
+    dispatch(setActiveInputId(null));
     dispatch(toggleChooseOnMap(false));
+    dispatch(setMarkerCoordinates(null));
+    dispatch(setMapLocation(DEFAULT_LOCATION.center));
   };
 
   return (
@@ -26,6 +33,7 @@ export function ChooseOnMapForm() {
       anchor="bottom"
       open={open}
       onClose={onClose}
+      keepMounted
       classes={{ paper: styles.mapContainer }}
     >
       <Map />

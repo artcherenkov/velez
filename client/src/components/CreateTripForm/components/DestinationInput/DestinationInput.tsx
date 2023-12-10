@@ -5,12 +5,18 @@ import TextField from "@mui/material/TextField";
 import styles from "./DestinationInput.module.css";
 
 interface IDestinationInputProps {
+  value: string;
+  onChange(evt: React.ChangeEvent<HTMLInputElement>): void;
+  id: string;
   placeholder: string;
   dragHandle?: React.ReactNode;
   onChooseOnMapClick(): void;
 }
 
 export function DestinationInput({
+  id,
+  value,
+  onChange,
   placeholder,
   dragHandle,
   onChooseOnMapClick,
@@ -18,10 +24,13 @@ export function DestinationInput({
   return (
     <div className={styles.container}>
       <TextField
+        id={id}
         placeholder={placeholder}
         fullWidth
         size="small"
         sx={{ background: "white" }}
+        value={value}
+        onChange={onChange}
         InputProps={{
           endAdornment: (
             <Button
