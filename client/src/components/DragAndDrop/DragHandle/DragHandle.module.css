@@ -1,0 +1,8 @@
+.dragHandleContainer {
+  min-width: 40px;
+  min-height: 40px;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
