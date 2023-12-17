@@ -21,6 +21,7 @@ interface AppState {
       activeInputId: string | null;
       markerCoordinates: LngLat | null;
       previewInputValue: string;
+      address: string;
     };
     destinations: TDestination[];
   };
@@ -45,6 +46,7 @@ const initialState: AppState = {
       activeInputId: null,
       markerCoordinates: null,
       previewInputValue: "",
+      address: "",
     },
     destinations: initialDestinations,
   },
@@ -73,20 +75,36 @@ export const appSlice = createSlice({
     setMarkerCoordinates: (state, action: PayloadAction<LngLat | null>) => {
       const { chooseOnMap } = state.createTripForm;
       chooseOnMap.markerCoordinates = action.payload;
-      chooseOnMap.previewInputValue = action.payload?.toString() || "unset";
     },
     setDestinationCoordinates: (state) => {
       const {
         destinations,
-        chooseOnMap: { activeInputId, markerCoordinates },
+        chooseOnMap: { activeInputId, markerCoordinates, address },
       } = state.createTripForm;
       const activeDestinationIndex = destinations.findIndex(
         (d) => d.id === activeInputId,
       );
       destinations[activeDestinationIndex].coordinates = markerCoordinates;
+      destinations[activeDestinationIndex].value = address;
     },
     setMapLocation: (state, action: PayloadAction<LngLat>) => {
       state.mapDefaultLocation = { center: action.payload, zoom: 12 };
+    },
+    setAddress: (state, action: PayloadAction<string>) => {
+      state.createTripForm.chooseOnMap.address = action.payload;
+    },
+    setPreviewInputValue: (state, action: PayloadAction<string>) => {
+      state.createTripForm.chooseOnMap.previewInputValue = action.payload;
+    },
+    setActiveInputValue: (state, action: PayloadAction<string>) => {
+      const {
+        destinations,
+        chooseOnMap: { activeInputId },
+      } = state.createTripForm;
+      const activeDestinationIndex = destinations.findIndex(
+        (d) => d.id === activeInputId,
+      );
+      destinations[activeDestinationIndex].value = action.payload;
     },
   },
 });
@@ -98,6 +116,9 @@ export const {
   setMarkerCoordinates,
   setDestinationCoordinates,
   setMapLocation,
+  setPreviewInputValue,
+  setAddress,
+  setActiveInputValue,
 } = appSlice.actions;
 
 export const selectMapDefaultLocation = (state: RootState) => {

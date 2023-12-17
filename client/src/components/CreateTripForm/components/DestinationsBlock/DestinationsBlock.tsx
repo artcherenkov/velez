@@ -9,13 +9,24 @@ import {
   selectDestinations,
   selectDestinationsById,
   setActiveInputId,
+  setActiveInputValue,
   setMapLocation,
   setMarkerCoordinates,
   toggleChooseOnMap,
 } from "../../../../redux/appSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { DragHandle, DroppableContainer } from "../../../DragAndDrop";
+import { asyncDebounce } from "../../../Map";
 import { DestinationInput } from "../DestinationInput";
+
+export const fetchSuggestions = asyncDebounce(async (string: string) => {
+  const res = await fetch(
+    `https://suggest-maps.yandex.ru/v1/suggest?apikey=561f0e28-2ce9-4c47-99ae-e5d09906007f&text=${string}`,
+  );
+
+  const { response } = await res.json();
+  console.log(response);
+}, 1000);
 
 export function DestinationsBlock() {
   const dispatch = useAppDispatch();
@@ -34,7 +45,14 @@ export function DestinationsBlock() {
     dispatch(setMapLocation(markerCoordinates));
     dispatch(toggleChooseOnMap(true));
   };
-  const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {};
+  const onChange = async (string: string) => {
+    dispatch(setActiveInputValue(string));
+    // await fetchSuggestions(string);
+  };
+
+  const onFocus = (id: string) => () => {
+    dispatch(setActiveInputId(id));
+  };
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
@@ -65,8 +83,9 @@ export function DestinationsBlock() {
                   <DestinationInput
                     id={d.id}
                     placeholder={d.placeholder}
-                    value={destinationsById[d.id].coordinates?.toString() || ""}
+                    value={destinationsById[d.id].value}
                     onChange={onChange}
+                    onFocus={onFocus(d.id)}
                     onChooseOnMapClick={onChooseOnMapClick(d.id)}
                     dragHandle={
                       <DragHandle dragHandleProps={provided.dragHandleProps} />
