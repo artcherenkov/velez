@@ -6,8 +6,11 @@ import {
 import Autocomplete, {
   AutocompleteRenderInputParams,
 } from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import { grey } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 
 import { TPlace } from "../DestinationsBlock";
 
@@ -81,7 +84,10 @@ export function DestinationSuggest({
   return (
     <div className={styles.container}>
       <Autocomplete
-        sx={{ ".MuiAutocomplete-inputRoot": { padding: "8px !important" } }}
+        sx={{
+          ".MuiAutocomplete-inputRoot": { padding: "8px !important" },
+          ".MuiPopper-root": { outline: "2px solid red", borderRadius: 4 },
+        }}
         options={options}
         fullWidth
         autoComplete
@@ -101,8 +107,12 @@ export function DestinationSuggest({
         renderOption={(props, option) => {
           return (
             <li {...props} key={option.id}>
-              {option.title} <br />
-              {option.subtitle}
+              <Box display="flex" flexDirection="column">
+                <Typography>{option.title}</Typography>
+                <Typography variant="body2" color={grey.A700}>
+                  {option.subtitle}
+                </Typography>
+              </Box>
             </li>
           );
         }}

@@ -17,6 +17,7 @@ import {
   selectSuggestions,
   setActiveInputId,
   setActiveInputValue,
+  setAddress,
   setDestinationCoords,
   setMapLocation,
   setMarkerCoordinates,
@@ -70,6 +71,7 @@ export function DestinationsBlock() {
 
     dispatch(setActiveInputId(id));
     dispatch(setMarkerCoordinates(markerCoordinates));
+    dispatch(setAddress(destination.value));
     dispatch(
       setMapLocation({
         center: markerCoordinates,
