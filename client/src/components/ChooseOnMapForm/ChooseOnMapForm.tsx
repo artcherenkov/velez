@@ -25,7 +25,7 @@ export function ChooseOnMapForm() {
     dispatch(setActiveInputId(null));
     dispatch(toggleChooseOnMap(false));
     dispatch(setMarkerCoordinates(null));
-    dispatch(setMapLocation(DEFAULT_LOCATION.center));
+    dispatch(setMapLocation(DEFAULT_LOCATION));
   };
 
   return (

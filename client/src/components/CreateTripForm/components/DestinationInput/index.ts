@@ -1,1 +1,1 @@
-export * from "./DestinationInput";
+export * from "./DestinationSuggest";

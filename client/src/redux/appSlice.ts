@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LngLat } from "@yandex/ymaps3-types";
 import { YMapLocationRequest } from "@yandex/ymaps3-types/imperative/YMap";
 
+import { TPlace } from "../components/CreateTripForm/components";
 import { DEFAULT_LOCATION } from "../constants/map";
 
 import { RootState } from "./index";
@@ -24,6 +25,7 @@ interface AppState {
       address: string;
     };
     destinations: TDestination[];
+    suggestions: TPlace[];
   };
 }
 
@@ -49,6 +51,7 @@ const initialState: AppState = {
       address: "",
     },
     destinations: initialDestinations,
+    suggestions: [],
   },
 };
 
@@ -87,8 +90,8 @@ export const appSlice = createSlice({
       destinations[activeDestinationIndex].coordinates = markerCoordinates;
       destinations[activeDestinationIndex].value = address;
     },
-    setMapLocation: (state, action: PayloadAction<LngLat>) => {
-      state.mapDefaultLocation = { center: action.payload, zoom: 12 };
+    setMapLocation: (state, action: PayloadAction<YMapLocationRequest>) => {
+      state.mapDefaultLocation = action.payload;
     },
     setAddress: (state, action: PayloadAction<string>) => {
       state.createTripForm.chooseOnMap.address = action.payload;
@@ -106,6 +109,18 @@ export const appSlice = createSlice({
       );
       destinations[activeDestinationIndex].value = action.payload;
     },
+    setSuggestions: (state, action: PayloadAction<TPlace[]>) => {
+      state.createTripForm.suggestions = action.payload;
+    },
+    setDestinationCoords: (
+      state,
+      action: PayloadAction<{ lngLat: LngLat; id: string }>,
+    ) => {
+      const { destinations } = state.createTripForm;
+      const { id, lngLat } = action.payload;
+      const activeDestinationIndex = destinations.findIndex((d) => d.id === id);
+      destinations[activeDestinationIndex].coordinates = lngLat;
+    },
   },
 });
 
@@ -119,6 +134,8 @@ export const {
   setPreviewInputValue,
   setAddress,
   setActiveInputValue,
+  setSuggestions,
+  setDestinationCoords,
 } = appSlice.actions;
 
 export const selectMapDefaultLocation = (state: RootState) => {
@@ -151,6 +168,10 @@ export const selectMarkerCoordinates = (state: RootState) => {
 
 export const selectPreviewInputValue = (state: RootState) => {
   return state.createTripForm.chooseOnMap.previewInputValue;
+};
+
+export const selectSuggestions = (state: RootState) => {
+  return state.createTripForm.suggestions;
 };
 
 export default appSlice.reducer;

@@ -44,11 +44,25 @@ export function asyncDebounce<F extends (...args: any[]) => Promise<any>>(
     }) as ReturnType<F>;
 }
 
-const getMarkerPositionDecode = asyncDebounce(async (lngLat: LngLat) => {
+export const getCoordinateByUri = async (uri = "") => {
+  const url = uri ? "&uri=" + uri : "";
   const res = await fetch(
-    `https://geocode-maps.yandex.ru/1.x/?apikey=d9648c9b-24c7-43be-9cc8-0e40bef9c076&geocode=${lngLat.join(
-      ",",
-    )}&format=json`,
+    `https://geocode-maps.yandex.ru/1.x/?apikey=d9648c9b-24c7-43be-9cc8-0e40bef9c076${url}&format=json`,
+    { headers: { Referer: "http://localhost:8080" } },
+  );
+
+  const { response } = await res.json();
+
+  console.log(response);
+
+  return response.GeoObjectCollection.featureMember[0].GeoObject.Point;
+};
+
+export const getMarkerPositionDecode = async (lngLat?: LngLat, uri = "") => {
+  const geocode = lngLat ? "&geocode=" + lngLat.join(",") : "";
+  const url = uri ? "&uri=" + uri : "";
+  const res = await fetch(
+    `https://geocode-maps.yandex.ru/1.x/?apikey=d9648c9b-24c7-43be-9cc8-0e40bef9c076${geocode}${url}&format=json`,
     { headers: { Referer: "http://localhost:8080" } },
   );
 
@@ -57,7 +71,12 @@ const getMarkerPositionDecode = asyncDebounce(async (lngLat: LngLat) => {
   console.log(response);
 
   return response.GeoObjectCollection.featureMember[0].GeoObject.name;
-}, 1500);
+};
+
+const debouncedGetMarkerPositionDecode = asyncDebounce(
+  getMarkerPositionDecode,
+  1500,
+);
 
 export function Map() {
   const dispatch = useAppDispatch();
@@ -72,7 +91,9 @@ export function Map() {
     camera: YMapCamera;
   }) => {
     dispatch(setMarkerCoordinates(args.location.center));
-    const address = await getMarkerPositionDecode(args.location.center);
+    const address = await debouncedGetMarkerPositionDecode(
+      args.location.center,
+    );
     dispatch(setAddress(address));
     dispatch(setPreviewInputValue(address));
   };
