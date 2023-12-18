@@ -7,7 +7,7 @@ import { LightningIcon } from "../../../../../../icons/LightningIcon";
 import { RadioSelectContainer } from "../RadioSelectContainer";
 
 function LightningIconContainer(props: IconContainerProps) {
-  return <Box sx={{ mr: -1 }} {...props} />;
+  return <Box {...props} />;
 }
 
 interface IDifficultySelectProps {
@@ -19,10 +19,10 @@ export function DifficultySelect({ value, onChange }: IDifficultySelectProps) {
   return (
     <RadioSelectContainer label="Сложность">
       <Rating
-        sx={{ mt: 1, mr: 1 }}
+        sx={{ mt: 1, display: "flex", gap: 1 }}
         max={3}
-        icon={<LightningIcon size={44} fill={deepPurple.A400} />}
-        emptyIcon={<LightningIcon size={44} fill={deepPurple["50"]} />}
+        icon={<LightningIcon size={36} fill={deepPurple.A400} />}
+        emptyIcon={<LightningIcon size={36} fill={deepPurple["50"]} />}
         IconContainerComponent={LightningIconContainer}
         value={value}
         onChange={onChange}

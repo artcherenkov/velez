@@ -6,6 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { YMapsProvider } from "../../contexts/YMapsContext";
 import { CreateTripPageContainer } from "../../pages/CreateTripPageContainer";
 import { MainPageContainer } from "../../pages/MainPageContainer";
+import { TripsPageContainer } from "../../pages/TripsPageContainer/TripsPageContainer";
 import { store } from "../../redux";
 import { useChangePageHeightOnWindowResize } from "../../utils/useChangePageHeightOnWindowResize";
 
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <MainPageContainer />,
+  },
+  {
+    path: "/trips",
+    element: <TripsPageContainer />,
   },
   {
     path: "/create",

@@ -14,8 +14,19 @@ type TDestination = {
   coordinates: LngLat | null;
 };
 
+export type TTrip = {
+  description: string;
+  destinations: TDestination[];
+  difficulty: number;
+  price: number;
+  title: string;
+  transportType: string;
+};
+
 interface AppState {
   mapDefaultLocation: YMapLocationRequest;
+  placesPreviewActive: boolean;
+  lineString: any;
   createTripForm: {
     chooseOnMap: {
       isActive: boolean;
@@ -27,6 +38,7 @@ interface AppState {
     destinations: TDestination[];
     suggestions: TPlace[];
   };
+  trips: TTrip[];
 }
 
 type TReorderDestinationsPayload = PayloadAction<{
@@ -41,7 +53,10 @@ const initialDestinations: TDestination[] = [
 ];
 
 const initialState: AppState = {
+  placesPreviewActive: false,
+  lineString: null,
   mapDefaultLocation: DEFAULT_LOCATION,
+  trips: [],
   createTripForm: {
     chooseOnMap: {
       isActive: false,
@@ -62,6 +77,12 @@ export const appSlice = createSlice({
     toggleChooseOnMap: (state, action: PayloadAction<boolean>) => {
       state.createTripForm.chooseOnMap.isActive =
         action.payload ?? !state.createTripForm.chooseOnMap.isActive;
+    },
+    togglePlacesPreview: (state, action: PayloadAction<boolean>) => {
+      state.placesPreviewActive = action.payload ?? !state.placesPreviewActive;
+    },
+    setLineString: (state, action: PayloadAction<any>) => {
+      state.lineString = action.payload;
     },
     reorderDestinations: (state, action: TReorderDestinationsPayload) => {
       const { startIndex, endIndex } = action.payload;
@@ -121,6 +142,9 @@ export const appSlice = createSlice({
       const activeDestinationIndex = destinations.findIndex((d) => d.id === id);
       destinations[activeDestinationIndex].coordinates = lngLat;
     },
+    addTrip: (state, action: PayloadAction<TTrip>) => {
+      state.trips.push(action.payload);
+    },
   },
 });
 
@@ -136,6 +160,9 @@ export const {
   setActiveInputValue,
   setSuggestions,
   setDestinationCoords,
+  addTrip,
+  togglePlacesPreview,
+  setLineString,
 } = appSlice.actions;
 
 export const selectMapDefaultLocation = (state: RootState) => {
@@ -172,6 +199,18 @@ export const selectPreviewInputValue = (state: RootState) => {
 
 export const selectSuggestions = (state: RootState) => {
   return state.createTripForm.suggestions;
+};
+
+export const selectTrips = (state: RootState) => {
+  return state.trips;
+};
+
+export const selectPlacesPreviewActive = (state: RootState) => {
+  return state.placesPreviewActive;
+};
+
+export const selectLineString = (state: RootState) => {
+  return state.lineString;
 };
 
 export default appSlice.reducer;

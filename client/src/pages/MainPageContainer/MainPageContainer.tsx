@@ -10,7 +10,7 @@ export function MainPageContainer() {
         Привет от Velez Trip!
       </Typography>
       <Typography variant="h5" component="h2" textAlign="center" mt={2}>
-        <NavLink to="/create">Создайте свой первый маршрут</NavLink>
+        <NavLink to="/trips">Создайте свой первый маршрут</NavLink>
       </Typography>
     </Box>
   );

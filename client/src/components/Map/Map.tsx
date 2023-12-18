@@ -5,8 +5,11 @@ import { debounce } from "lodash";
 
 import { YMapsContext } from "../../contexts/YMapsContext";
 import {
+  selectDestinations,
   selectIsChooseOnMapActive,
+  selectLineString,
   selectMapDefaultLocation,
+  selectPlacesPreviewActive,
   setAddress,
   setMarkerCoordinates,
   setPreviewInputValue,
@@ -84,6 +87,8 @@ export function Map() {
 
   const isChooseOnMapActive = useAppSelector(selectIsChooseOnMapActive);
   const mapLocation = useAppSelector(selectMapDefaultLocation);
+  const destinations = useAppSelector(selectDestinations);
+  const lineString = useAppSelector(selectLineString);
 
   const onCardMoveEnd = async (args: {
     type: BehaviorType;
@@ -109,6 +114,8 @@ export function Map() {
     YMapDefaultFeaturesLayer,
     YMapZoomControl,
     YMapListener,
+    YMapDefaultMarker,
+    YMapFeature,
   } = modules;
 
   return (
@@ -119,6 +126,17 @@ export function Map() {
         <YMapControls position="right">
           <YMapZoomControl />
         </YMapControls>
+        {!!lineString && (
+          <>
+            {destinations.map((d) => (
+              <YMapDefaultMarker coordinates={d.coordinates || [0, 0]} />
+            ))}
+            <YMapFeature
+              geometry={lineString}
+              style={{ stroke: [{ width: 4 }] }}
+            />
+          </>
+        )}
         {isChooseOnMapActive && (
           <>
             <YMapListener onActionEnd={onCardMoveEnd} />
