@@ -78,7 +78,7 @@ export const getMarkerPositionDecode = async (lngLat?: LngLat, uri = "") => {
 
 const debouncedGetMarkerPositionDecode = asyncDebounce(
   getMarkerPositionDecode,
-  1500,
+  300,
 );
 
 export function Map() {
