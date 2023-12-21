@@ -90,6 +90,7 @@ export function DestinationSuggest({
         }}
         options={options}
         fullWidth
+        placeholder="Введите адрес или название места"
         autoComplete
         includeInputInList
         filterSelectedOptions
