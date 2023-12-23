@@ -64,6 +64,10 @@ const Trip = ({ trip }: ITrip) => {
   const destinations = useAppSelector(selectDestinations);
   const dispatch = useAppDispatch();
 
+  const filteredDestinations = destinations.filter(
+    (d) => d.coordinates && d.coordinates[0] !== 0 && d.coordinates[1] !== 0,
+  );
+
   return (
     <>
       <Box p={2} sx={{ background: "#fff", borderRadius: 3 }} boxShadow={1}>
@@ -133,8 +137,8 @@ const Trip = ({ trip }: ITrip) => {
               variant="contained"
               size="small"
               onClick={async () => {
-                const coordinates: LngLat[] = destinations.map(
-                  (d) => d.coordinates || [0, 0],
+                const coordinates: LngLat[] = filteredDestinations.map(
+                  (d) => d.coordinates!,
                 );
                 const lineString = await fetchRoute(coordinates);
                 dispatch(setLineString(lineString));

@@ -38,7 +38,7 @@ export const fetchSuggestions = asyncDebounce(async (string: string) => {
   const json = await res.json();
 
   return json.results ?? [];
-}, 100);
+}, 500);
 
 export type TPlace = {
   id: string;
